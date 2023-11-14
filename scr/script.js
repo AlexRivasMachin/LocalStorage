@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function loadTasks() {
         const storedTasks = localStorage.getItem('tasks');
         if (storedTasks) {
+            clearTasks();
             const tasks = JSON.parse(storedTasks);
             tasks.forEach(taskText => addTask(taskText));
         }
