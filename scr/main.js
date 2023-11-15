@@ -1,21 +1,23 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const port = 3000;
+const path = require('path');
 
-const perfotmEvenMoreWork = async () => {
-    console.log('performing even more work for', global.requestId);
-};
+app.use(bodyParser.json());
 
-const performWork = async () => {
-    console.log('performing work for', global.requestId);
-    await perfotmEvenMoreWork();
-};
+const tasks = [];
 
-let requestId = 0;
-app.get('/', async (req, res) => {
-    global.requestId = requestId++;
-    await performWork();
-    res.send('Hello World!');
+// Ruta para servir la página HTML
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.post('/index.html', (req, res) => {
+    const taskText = req.body.task;
+    tasks.push(taskText);
+    console.log('Tarea almacenada en el servidor:', taskText);
+    res.send('Tarea almacenada con éxito.');
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

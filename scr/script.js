@@ -1,20 +1,22 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const taskForm = document.getElementById('taskForm');
     const taskInput = document.getElementById('task-input');
     const taskList = document.getElementById('lista-elementos');
     const deleteButton = document.getElementById('Borrar');
-    const uploadButton = document.getElementById('Subir');
     const recoverButton = document.getElementById('Recuperar');
 
     // Cargar tareas almacenadas en localStorage al cargar la página
     loadTasks();
 
-    // Manejar clic en el botón "Subir Tarea"
-    uploadButton.addEventListener('click', function () {
+    // Manejar envío del formulario
+    taskForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
         const taskText = taskInput.value.trim();
         if (taskText !== '') {
             addTask(taskText);
             saveTasks();
-            taskInput.value = ''; // Limpiar el campo de entrada después de agregar la tarea
+            await sendDataToServer(taskText);
+            taskInput.value = '';
         }
     });
 
@@ -55,5 +57,26 @@ document.addEventListener('DOMContentLoaded', function () {
     // Función para borrar las tareas
     function clearTasks() {
         taskList.innerHTML = '';
+    }
+
+    // Función para enviar datos al servidor usando fetch y método POST
+    async function sendDataToServer(taskText) {
+        try {
+            const response = await fetch('/index.html', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ task: taskText }),
+            });
+
+            if (response.ok) {
+                console.log('Datos enviados al servidor con éxito.');
+            } else {
+                console.error('Error al enviar datos al servidor.');
+            }
+        } catch (error) {
+            console.error('Error en la solicitud fetch:', error);
+        }
     }
 });
