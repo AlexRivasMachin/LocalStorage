@@ -21,7 +21,6 @@ app.post('/index.html', (req, res) => {
     res.send('Tarea almacenada con éxito.');
 });
 
-// Ruta para subir una tarea al servidor
 
 // Ruta para subir una tarea al servidor
 app.post('/uploadTask', (req, res) => {
